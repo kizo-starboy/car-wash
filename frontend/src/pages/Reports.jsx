@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Calendar, Printer, Download, Search } from 'lucide-react'
 
 const Reports = () => {
   const [payments, setPayments] = useState([])
@@ -148,11 +147,11 @@ const Reports = () => {
             body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
             .header { text-align: center; margin-bottom: 30px; }
             .section { margin-bottom: 30px; }
-            .section h3 { color: #d97706; border-bottom: 2px solid #d97706; padding-bottom: 5px; }
+            .section h3 { color: #dc2626; border-bottom: 2px solid #dc2626; padding-bottom: 5px; }
             table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
             th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
             th { background-color: #f9fafb; font-weight: bold; }
-            .summary { background-color: #fef3c7; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+            .summary { background-color: #fee2e2; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
             .footer { margin-top: 30px; text-align: center; font-size: 12px; border-top: 1px solid #ddd; padding-top: 20px; }
             .signature-line { margin-top: 50px; border-bottom: 1px solid #000; width: 200px; display: inline-block; }
           </style>
@@ -272,9 +271,8 @@ const Reports = () => {
 
       {/* Daily Report Section */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-        <div className="p-4 bg-amber-50 border-b border-amber-100">
+        <div className="p-4 bg-red-50 border-b border-red-100">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-            <Calendar size={20} className="mr-2 text-amber-600" />
             Daily Report
           </h2>
         </div>
@@ -289,20 +287,20 @@ const Reports = () => {
                 type="date"
                 value={reportDate}
                 onChange={handleDateChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
               />
             </div>
 
             <div className="flex-1">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                  <div className="text-sm text-blue-600 mb-1">Total Payments</div>
-                  <div className="text-2xl font-bold text-blue-800">{dailyReport?.count || 0}</div>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="text-sm text-gray-600 mb-1">Total Payments</div>
+                  <div className="text-2xl font-bold text-gray-800">{dailyReport?.count || 0}</div>
                 </div>
 
-                <div className="bg-green-50 p-4 rounded-lg border border-green-100">
-                  <div className="text-sm text-green-600 mb-1">Total Revenue</div>
-                  <div className="text-2xl font-bold text-green-800">
+                <div className="bg-red-50 p-4 rounded-lg border border-red-100">
+                  <div className="text-sm text-red-600 mb-1">Total Revenue</div>
+                  <div className="text-2xl font-bold text-red-800">
                     {dailyReport?.totalAmount?.toLocaleString() || 0} RWF
                   </div>
                 </div>
@@ -310,9 +308,8 @@ const Reports = () => {
                 <div className="flex items-center justify-center">
                   <button
                     onClick={handlePrintReport}
-                    className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                   >
-                    <Printer size={18} className="mr-2" />
                     Print Daily
                   </button>
                 </div>
@@ -320,9 +317,8 @@ const Reports = () => {
                 <div className="flex items-center justify-center">
                   <button
                     onClick={handlePrintComprehensiveReport}
-                    className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    <Printer size={18} className="mr-2" />
                     Print Full Report
                   </button>
                 </div>
@@ -385,22 +381,20 @@ const Reports = () => {
 
       {/* All Payments Report Section */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="p-4 bg-amber-50 border-b border-amber-100">
+        <div className="p-4 bg-gray-50 border-b border-gray-100">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-            <Download size={20} className="mr-2 text-amber-600" />
             All Payments Report
           </h2>
         </div>
 
         <div className="p-4 border-b">
           <div className="flex items-center">
-            <Search size={20} className="text-gray-400 mr-2" />
             <input
               type="text"
               placeholder="Search by payment number, amount, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border-none focus:outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Plus, Search, Edit, Trash, Printer } from 'lucide-react'
 
 const Payments = () => {
   const [payments, setPayments] = useState([])
@@ -114,9 +113,8 @@ const Payments = () => {
             resetForm()
             setShowForm(!showForm)
           }}
-          className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700"
+          className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
         >
-          <Plus size={20} className="mr-2" />
           {showForm ? 'Cancel' : (isEditing ? 'Cancel Edit' : 'Add New Payment')}
         </button>
       </div>
@@ -138,7 +136,7 @@ const Payments = () => {
                   value={formData.paymentDate}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                 />
               </div>
 
@@ -153,7 +151,7 @@ const Payments = () => {
                   onChange={handleChange}
                   required
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
                   placeholder="e.g., 5000"
                 />
               </div>
@@ -169,7 +167,7 @@ const Payments = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white bg-amber-600 rounded-md hover:bg-amber-700"
+                className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700"
               >
                 {isEditing ? 'Update Payment' : 'Add Payment'}
               </button>
@@ -181,13 +179,12 @@ const Payments = () => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-4 border-b">
           <div className="flex items-center">
-            <Search size={20} className="text-gray-400 mr-2" />
             <input
               type="text"
               placeholder="Search by payment number, amount, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border-none focus:outline-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
             />
           </div>
         </div>
@@ -234,17 +231,17 @@ const Payments = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEdit(payment)}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        className="text-red-600 hover:text-red-900 mr-3 px-3 py-1 border border-red-600 rounded hover:bg-red-50"
                         title="Edit"
                       >
-                        <Edit size={18} />
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDelete(payment.PaymentNumber)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-gray-600 hover:text-gray-900 px-3 py-1 border border-gray-600 rounded hover:bg-gray-50"
                         title="Delete"
                       >
-                        <Trash size={18} />
+                        Delete
                       </button>
                     </td>
                   </tr>

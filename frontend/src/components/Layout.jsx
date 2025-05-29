@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Menu, X, Home, Car, Package, FileText, CreditCard, BarChart2, LogOut } from 'lucide-react'
 
 const Layout = ({ children, user, setUser }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -26,11 +25,11 @@ const Layout = ({ children, user, setUser }) => {
   }
 
   const menuItems = [
-    { path: '/', label: 'Dashboard', icon: <Home size={20} /> },
-    { path: '/cars', label: 'Cars', icon: <Car size={20} /> },
-    { path: '/services', label: 'Service Records', icon: <FileText size={20} /> },
-    { path: '/payments', label: 'Payments', icon: <CreditCard size={20} /> },
-    { path: '/reports', label: 'Reports', icon: <BarChart2 size={20} /> },
+    { path: '/', label: 'Dashboard' },
+    { path: '/cars', label: 'Cars' },
+    { path: '/services', label: 'Service Records' },
+    { path: '/payments', label: 'Payments' },
+    { path: '/reports', label: 'Reports' },
   ]
 
   return (
@@ -41,7 +40,7 @@ const Layout = ({ children, user, setUser }) => {
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-amber-600 lg:translate-x-0 lg:static lg:inset-0 ${
+      <div className={`fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-red-600 lg:translate-x-0 lg:static lg:inset-0 ${
         sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'
       }`}>
         <div className="flex items-center justify-between px-6 py-4">
@@ -49,7 +48,7 @@ const Layout = ({ children, user, setUser }) => {
             <span className="text-xl font-semibold text-white">SmartPark CWSMS</span>
           </div>
           <button onClick={toggleSidebar} className="text-white lg:hidden">
-            <X size={24} />
+            ✕
           </button>
         </div>
 
@@ -60,21 +59,19 @@ const Layout = ({ children, user, setUser }) => {
               to={item.path}
               className={`flex items-center px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg ${
                 location.pathname === item.path
-                  ? 'bg-amber-700'
-                  : 'hover:bg-amber-700'
+                  ? 'bg-red-700'
+                  : 'hover:bg-red-700'
               }`}
             >
-              {item.icon}
-              <span className="mx-4 font-medium">{item.label}</span>
+              <span className="font-medium">{item.label}</span>
             </Link>
           ))}
 
           <button
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg hover:bg-amber-700"
+            className="flex items-center w-full px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg hover:bg-red-700"
           >
-            <LogOut size={20} />
-            <span className="mx-4 font-medium">Logout</span>
+            <span className="font-medium">Logout</span>
           </button>
         </nav>
       </div>
@@ -85,7 +82,7 @@ const Layout = ({ children, user, setUser }) => {
         <header className="flex items-center justify-between px-6 py-4 bg-white border-b-1 shadow">
           <div className="flex items-center">
             <button onClick={toggleSidebar} className="text-gray-500 focus:outline-none lg:hidden">
-              <Menu size={24} />
+              ☰
             </button>
           </div>
 

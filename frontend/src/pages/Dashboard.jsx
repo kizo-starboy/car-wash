@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { Car, Package, FileText, CreditCard } from 'lucide-react'
 
 const Dashboard = () => {
   const [summary, setSummary] = useState({
@@ -31,30 +30,26 @@ const Dashboard = () => {
     {
       title: 'Total Cars',
       value: summary.carCount,
-      icon: <Car size={24} className="text-blue-500" />,
       link: '/cars',
-      color: 'bg-blue-100 border-blue-500'
+      color: 'bg-gray-100 border-gray-500'
     },
     {
       title: 'Total Payments',
       value: summary.paymentCount,
-      icon: <Package size={24} className="text-green-500" />,
       link: '/payments',
-      color: 'bg-green-100 border-green-500'
+      color: 'bg-red-100 border-red-500'
     },
     {
       title: 'Service Records',
       value: summary.serviceCount,
-      icon: <FileText size={24} className="text-amber-500" />,
       link: '/services',
-      color: 'bg-amber-100 border-amber-500'
+      color: 'bg-gray-200 border-gray-600'
     },
     {
       title: 'Total Revenue',
       value: `${summary.totalRevenue?.toLocaleString() || 0} RWF`,
-      icon: <CreditCard size={24} className="text-purple-500" />,
       link: '/payments',
-      color: 'bg-purple-100 border-purple-500'
+      color: 'bg-red-200 border-red-600'
     }
   ]
 
@@ -83,7 +78,6 @@ const Dashboard = () => {
                 <h2 className="text-lg font-semibold text-gray-700">{card.title}</h2>
                 <p className="mt-2 text-2xl font-bold text-gray-800">{card.value}</p>
               </div>
-              <div>{card.icon}</div>
             </div>
           </Link>
         ))}
@@ -94,26 +88,23 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             to="/cars"
-            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-red-500"
           >
-            <Car size={20} className="text-amber-600" />
-            <span className="ml-3 font-medium text-gray-700">Register New Car</span>
+            <span className="font-medium text-gray-700">Register New Car</span>
           </Link>
 
           <Link
             to="/services"
-            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-gray-500"
           >
-            <FileText size={20} className="text-amber-600" />
-            <span className="ml-3 font-medium text-gray-700">Create Service Record</span>
+            <span className="font-medium text-gray-700">Create Service Record</span>
           </Link>
 
           <Link
             to="/payments"
-            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-red-600"
           >
-            <CreditCard size={20} className="text-amber-600" />
-            <span className="ml-3 font-medium text-gray-700">Record Payment</span>
+            <span className="font-medium text-gray-700">Record Payment</span>
           </Link>
         </div>
       </div>
