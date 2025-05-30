@@ -117,4 +117,66 @@ router.delete('/:plateNumber', (req, res) => {
   });
 });
 
+// Get car with its service packages and payments
+router.get('/:plateNumber/details', (req, res) => {
+  const { plateNumber } = req.params;
+
+  // Get car details
+  const carQuery = 'SELECT * FROM Car WHERE PlateNumber = ?';
+
+  db.query(carQuery, [plateNumber], (err, carResults) => {
+    if (err) {
+      console.error('Error fetching car:', err);
+      return res.status(500).json({ message: 'Server error' });
+    }
+
+    if (carResults.length === 0) {
+      return res.status(404).json({ message: 'Car not found' });
+    }
+
+    const car = carResults[0];
+
+    // Get service packages for this car
+    const serviceQuery = `
+      SELECT RecordNumber, ServiceDate
+      FROM ServicePackage
+      WHERE PlateNumber = ?
+      ORDER BY RecordNumber DESC
+    `;
+
+    db.query(serviceQuery, [plateNumber], (err, serviceResults) => {
+      if (err) {
+        console.error('Error fetching service packages:', err);
+        return res.status(500).json({ message: 'Server error' });
+      }
+
+      // Get payments for this car
+      const paymentQuery = `
+        SELECT
+          p.PaymentNumber,
+          p.RecordNumber,
+          p.AmountPaid,
+          p.PaymentDate
+        FROM Payment p
+        LEFT JOIN ServicePackage sp ON p.RecordNumber = sp.RecordNumber
+        WHERE sp.PlateNumber = ?
+        ORDER BY p.PaymentNumber DESC
+      `;
+
+      db.query(paymentQuery, [plateNumber], (err, paymentResults) => {
+        if (err) {
+          console.error('Error fetching payments:', err);
+          return res.status(500).json({ message: 'Server error' });
+        }
+
+        res.status(200).json({
+          car: car,
+          servicePackages: serviceResults,
+          payments: paymentResults
+        });
+      });
+    });
+  });
+});
+
 module.exports = router;

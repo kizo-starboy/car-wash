@@ -4,20 +4,26 @@ import toast from 'react-hot-toast'
 
 const ServiceRecords = () => {
   const [services, setServices] = useState([])
+  const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [formData, setFormData] = useState({
+    plateNumber: '',
     serviceDate: new Date().toISOString().split('T')[0]
   })
   const [isEditing, setIsEditing] = useState(false)
   const [editId, setEditId] = useState(null)
 
-  // Fetch all service records
+  // Fetch all service records and cars
   const fetchData = async () => {
     try {
-      const { data } = await axios.get('/services')
-      setServices(data)
+      const [servicesResponse, carsResponse] = await Promise.all([
+        axios.get('/services'),
+        axios.get('/cars')
+      ])
+      setServices(servicesResponse.data)
+      setCars(carsResponse.data)
     } catch (error) {
       console.error('Error fetching data:', error)
       toast.error('Failed to fetch data')
@@ -61,6 +67,7 @@ const ServiceRecords = () => {
   // Reset form
   const resetForm = () => {
     setFormData({
+      plateNumber: '',
       serviceDate: new Date().toISOString().split('T')[0]
     })
     setIsEditing(false)
@@ -71,6 +78,7 @@ const ServiceRecords = () => {
   // Edit service record
   const handleEdit = (service) => {
     setFormData({
+      plateNumber: service.PlateNumber,
       serviceDate: service.ServiceDate.split('T')[0]
     })
     setIsEditing(true)
@@ -97,6 +105,8 @@ const ServiceRecords = () => {
   // Filter services based on search term
   const filteredServices = services.filter(service =>
     service.RecordNumber.toString().includes(searchTerm) ||
+    service.PlateNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.DriverName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     new Date(service.ServiceDate).toLocaleDateString().includes(searchTerm.toLowerCase())
   )
 
@@ -121,7 +131,26 @@ const ServiceRecords = () => {
             {isEditing ? 'Edit Service Record' : 'Add New Service Record'}
           </h2>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Car (Plate Number)
+                </label>
+                <select
+                  name="plateNumber"
+                  value={formData.plateNumber}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                >
+                  <option value="">Select a car...</option>
+                  {cars.map((car) => (
+                    <option key={car.PlateNumber} value={car.PlateNumber}>
+                      {car.PlateNumber} - {car.DriverName} ({car.CarType})
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Service Date
@@ -161,7 +190,7 @@ const ServiceRecords = () => {
           <div className="flex items-center">
             <input
               type="text"
-              placeholder="Search by record number or date..."
+              placeholder="Search by record number, plate number, driver name, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
@@ -184,6 +213,9 @@ const ServiceRecords = () => {
                     Record Number
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Car Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Service Date
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -196,6 +228,11 @@ const ServiceRecords = () => {
                   <tr key={service.RecordNumber} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-lg font-medium text-gray-900">#{service.RecordNumber}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-gray-900 font-medium">{service.PlateNumber}</div>
+                      <div className="text-gray-500 text-sm">{service.DriverName}</div>
+                      <div className="text-gray-500 text-sm">{service.CarType} - {service.CarSize}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-gray-900">

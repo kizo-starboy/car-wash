@@ -4,21 +4,31 @@ import toast from 'react-hot-toast'
 
 const Payments = () => {
   const [payments, setPayments] = useState([])
+  const [serviceRecords, setServiceRecords] = useState([])
+  const [cars, setCars] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [formData, setFormData] = useState({
+    recordNumber: '',
     amountPaid: '',
     paymentDate: new Date().toISOString().split('T')[0]
   })
   const [isEditing, setIsEditing] = useState(false)
   const [editId, setEditId] = useState(null)
+  const [selectedCar, setSelectedCar] = useState('')
 
-  // Fetch all payments
+  // Fetch all payments, service records, and cars
   const fetchData = async () => {
     try {
-      const { data } = await axios.get('/payments')
-      setPayments(data)
+      const [paymentsResponse, servicesResponse, carsResponse] = await Promise.all([
+        axios.get('/payments'),
+        axios.get('/services'),
+        axios.get('/cars')
+      ])
+      setPayments(paymentsResponse.data)
+      setServiceRecords(servicesResponse.data)
+      setCars(carsResponse.data)
     } catch (error) {
       console.error('Error fetching data:', error)
       toast.error('Failed to fetch data')
@@ -35,6 +45,21 @@ const Payments = () => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
+  }
+
+  // Handle car selection change
+  const handleCarChange = (e) => {
+    const plateNumber = e.target.value
+    setSelectedCar(plateNumber)
+
+    // Reset record selection when car changes
+    setFormData({ ...formData, recordNumber: '' })
+  }
+
+  // Get filtered service records based on selected car
+  const getFilteredServiceRecords = () => {
+    if (!selectedCar) return serviceRecords
+    return serviceRecords.filter(record => record.PlateNumber === selectedCar)
   }
 
   // Handle form submission
@@ -62,9 +87,11 @@ const Payments = () => {
   // Reset form
   const resetForm = () => {
     setFormData({
+      recordNumber: '',
       amountPaid: '',
       paymentDate: new Date().toISOString().split('T')[0]
     })
+    setSelectedCar('')
     setIsEditing(false)
     setEditId(null)
     setShowForm(false)
@@ -73,9 +100,11 @@ const Payments = () => {
   // Edit payment
   const handleEdit = (payment) => {
     setFormData({
+      recordNumber: payment.RecordNumber,
       amountPaid: payment.AmountPaid,
       paymentDate: payment.PaymentDate.split('T')[0]
     })
+    setSelectedCar(payment.PlateNumber || '')
     setIsEditing(true)
     setEditId(payment.PaymentNumber)
     setShowForm(true)
@@ -101,6 +130,8 @@ const Payments = () => {
   const filteredPayments = payments.filter(payment =>
     payment.PaymentNumber.toString().includes(searchTerm) ||
     payment.AmountPaid.toString().includes(searchTerm) ||
+    payment.PlateNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    payment.DriverName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     new Date(payment.PaymentDate).toLocaleDateString().includes(searchTerm.toLowerCase())
   )
 
@@ -126,6 +157,46 @@ const Payments = () => {
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Car (Plate Number)
+                </label>
+                <select
+                  value={selectedCar}
+                  onChange={handleCarChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                >
+                  <option value="">Select a car...</option>
+                  {cars.map((car) => (
+                    <option key={car.PlateNumber} value={car.PlateNumber}>
+                      {car.PlateNumber} - {car.DriverName} ({car.CarType})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Service Record
+                </label>
+                <select
+                  name="recordNumber"
+                  value={formData.recordNumber}
+                  onChange={handleChange}
+                  required
+                  disabled={!selectedCar}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                >
+                  <option value="">Select a service record...</option>
+                  {getFilteredServiceRecords().map((record) => (
+                    <option key={record.RecordNumber} value={record.RecordNumber}>
+                      #{record.RecordNumber} - {new Date(record.ServiceDate).toLocaleDateString()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Payment Date
@@ -181,7 +252,7 @@ const Payments = () => {
           <div className="flex items-center">
             <input
               type="text"
-              placeholder="Search by payment number, amount, or date..."
+              placeholder="Search by payment number, amount, car, driver, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
@@ -204,6 +275,9 @@ const Payments = () => {
                     Payment Number
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Car & Service Details
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Payment Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -219,6 +293,11 @@ const Payments = () => {
                   <tr key={payment.PaymentNumber} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-lg font-medium text-gray-900">#{payment.PaymentNumber}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-gray-900 font-medium">{payment.PlateNumber}</div>
+                      <div className="text-gray-500 text-sm">{payment.DriverName}</div>
+                      <div className="text-gray-500 text-sm">Record #{payment.RecordNumber} - {payment.ServiceDate ? new Date(payment.ServiceDate).toLocaleDateString() : 'N/A'}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-gray-900">
