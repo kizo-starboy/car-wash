@@ -48,11 +48,34 @@ INSERT INTO `car` (`PlateNumber`, `CarType`, `CarSize`, `DriverName`, `PhoneNumb
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `servicepackage`
+--
+
+CREATE TABLE `servicepackage` (
+  `RecordNumber` int(11) NOT NULL,
+  `PlateNumber` varchar(20) NOT NULL,
+  `ServiceDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `servicepackage`
+--
+
+INSERT INTO `servicepackage` (`RecordNumber`, `PlateNumber`, `ServiceDate`) VALUES
+(1, 'RAC223d', '2025-05-29'),
+(2, 'RAD123A', '2025-05-29'),
+(3, 'RAE456B', '2025-05-28'),
+(4, 'RAF789C', '2025-05-29');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `payment`
 --
 
 CREATE TABLE `payment` (
   `PaymentNumber` int(11) NOT NULL,
+  `RecordNumber` int(11) NOT NULL,
   `AmountPaid` decimal(10,2) NOT NULL,
   `PaymentDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -61,32 +84,11 @@ CREATE TABLE `payment` (
 -- Dumping data for table `payment`
 --
 
-INSERT INTO `payment` (`PaymentNumber`, `AmountPaid`, `PaymentDate`) VALUES
-(1, 5000.00, '2025-05-29'),
-(2, 7500.00, '2025-05-29'),
-(3, 6000.00, '2025-05-28'),
-(4, 3000.00, '2025-05-29');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `servicepackage`
---
-
-CREATE TABLE `servicepackage` (
-  `RecordNumber` int(11) NOT NULL,
-  `ServiceDate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `servicepackage`
---
-
-INSERT INTO `servicepackage` (`RecordNumber`, `ServiceDate`) VALUES
-(1, '2025-05-29'),
-(2, '2025-05-29'),
-(3, '2025-05-28'),
-(4, '2025-05-29');
+INSERT INTO `payment` (`PaymentNumber`, `RecordNumber`, `AmountPaid`, `PaymentDate`) VALUES
+(1, 1, 5000.00, '2025-05-29'),
+(2, 2, 7500.00, '2025-05-29'),
+(3, 3, 6000.00, '2025-05-28'),
+(4, 4, 3000.00, '2025-05-29');
 
 -- --------------------------------------------------------
 
@@ -122,13 +124,15 @@ ALTER TABLE `car`
 -- Indexes for table `payment`
 --
 ALTER TABLE `payment`
-  ADD PRIMARY KEY (`PaymentNumber`);
+  ADD PRIMARY KEY (`PaymentNumber`),
+  ADD KEY `RecordNumber` (`RecordNumber`);
 
 --
 -- Indexes for table `servicepackage`
 --
 ALTER TABLE `servicepackage`
-  ADD PRIMARY KEY (`RecordNumber`);
+  ADD PRIMARY KEY (`RecordNumber`),
+  ADD KEY `PlateNumber` (`PlateNumber`);
 
 --
 -- Indexes for table `users`
@@ -158,6 +162,23 @@ ALTER TABLE `servicepackage`
 --
 ALTER TABLE `users`
   MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `payment`
+--
+ALTER TABLE `payment`
+  ADD CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`RecordNumber`) REFERENCES `servicepackage` (`RecordNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `servicepackage`
+--
+ALTER TABLE `servicepackage`
+  ADD CONSTRAINT `servicepackage_ibfk_1` FOREIGN KEY (`PlateNumber`) REFERENCES `car` (`PlateNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
