@@ -2,15 +2,23 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Get daily report
+// Get daily report with package information
 router.get('/daily/:date', (req, res) => {
   const { date } = req.params;
 
   const query = `
-    SELECT PaymentNumber, AmountPaid, PaymentDate
-    FROM Payment
-    WHERE DATE(PaymentDate) = ?
-    ORDER BY PaymentDate DESC
+    SELECT
+      p.PaymentNumber,
+      p.AmountPaid,
+      p.PaymentDate,
+      sp.PlateNumber,
+      pkg.PackageName,
+      pkg.PackageDescription
+    FROM Payment p
+    LEFT JOIN ServicePackage sp ON p.RecordNumber = sp.RecordNumber
+    LEFT JOIN Package pkg ON sp.PackageNumber = pkg.PackageNumber
+    WHERE DATE(p.PaymentDate) = ?
+    ORDER BY p.PaymentDate DESC
   `;
 
   db.query(query, [date], (err, results) => {
@@ -31,12 +39,20 @@ router.get('/daily/:date', (req, res) => {
   });
 });
 
-// Get all payments for reports
+// Get all payments for reports with package information
 router.get('/payments', (req, res) => {
   const query = `
-    SELECT PaymentNumber, AmountPaid, PaymentDate
-    FROM Payment
-    ORDER BY PaymentDate DESC
+    SELECT
+      p.PaymentNumber,
+      p.AmountPaid,
+      p.PaymentDate,
+      sp.PlateNumber,
+      pkg.PackageName,
+      pkg.PackageDescription
+    FROM Payment p
+    LEFT JOIN ServicePackage sp ON p.RecordNumber = sp.RecordNumber
+    LEFT JOIN Package pkg ON sp.PackageNumber = pkg.PackageNumber
+    ORDER BY p.PaymentDate DESC
   `;
 
   db.query(query, (err, results) => {
@@ -52,6 +68,7 @@ router.get('/payments', (req, res) => {
 // Get summary report
 router.get('/summary', (req, res) => {
   const carCountQuery = 'SELECT COUNT(*) as carCount FROM Car';
+  const packageCountQuery = 'SELECT COUNT(*) as packageCount FROM Package';
   const serviceCountQuery = 'SELECT COUNT(*) as serviceCount FROM ServicePackage';
   const paymentSumQuery = 'SELECT SUM(AmountPaid) as totalRevenue FROM Payment';
   const paymentCountQuery = 'SELECT COUNT(*) as paymentCount FROM Payment';
@@ -62,29 +79,37 @@ router.get('/summary', (req, res) => {
       return res.status(500).json({ message: 'Server error' });
     }
 
-    db.query(serviceCountQuery, (err, serviceResults) => {
+    db.query(packageCountQuery, (err, packageResults) => {
       if (err) {
-        console.error('Error getting service count:', err);
+        console.error('Error getting package count:', err);
         return res.status(500).json({ message: 'Server error' });
       }
 
-      db.query(paymentSumQuery, (err, paymentResults) => {
+      db.query(serviceCountQuery, (err, serviceResults) => {
         if (err) {
-          console.error('Error getting payment sum:', err);
+          console.error('Error getting service count:', err);
           return res.status(500).json({ message: 'Server error' });
         }
 
-        db.query(paymentCountQuery, (err, paymentCountResults) => {
+        db.query(paymentSumQuery, (err, paymentResults) => {
           if (err) {
-            console.error('Error getting payment count:', err);
+            console.error('Error getting payment sum:', err);
             return res.status(500).json({ message: 'Server error' });
           }
 
-          res.status(200).json({
-            carCount: carResults[0].carCount,
-            serviceCount: serviceResults[0].serviceCount,
-            totalRevenue: paymentResults[0].totalRevenue || 0,
-            paymentCount: paymentCountResults[0].paymentCount
+          db.query(paymentCountQuery, (err, paymentCountResults) => {
+            if (err) {
+              console.error('Error getting payment count:', err);
+              return res.status(500).json({ message: 'Server error' });
+            }
+
+            res.status(200).json({
+              carCount: carResults[0].carCount,
+              packageCount: packageResults[0].packageCount,
+              serviceCount: serviceResults[0].serviceCount,
+              totalRevenue: paymentResults[0].totalRevenue || 0,
+              paymentCount: paymentCountResults[0].paymentCount
+            });
           });
         });
       });

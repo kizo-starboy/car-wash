@@ -24,6 +24,28 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `package`
+--
+
+CREATE TABLE `package` (
+  `PackageNumber` int(11) NOT NULL,
+  `PackageName` varchar(100) NOT NULL,
+  `PackageDescription` text NOT NULL,
+  `PackagePrice` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `package`
+--
+
+INSERT INTO `package` (`PackageNumber`, `PackageName`, `PackageDescription`, `PackagePrice`) VALUES
+(1, 'Basic wash', 'Exterior hand wash', 5000.00),
+(2, 'Premium wash', 'Exterior and interior cleaning', 8000.00),
+(3, 'Deluxe wash', 'Full service with wax and polish', 12000.00);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `car`
 --
 
@@ -54,7 +76,8 @@ INSERT INTO `car` (`PlateNumber`, `CarType`, `CarSize`, `DriverName`, `PhoneNumb
 CREATE TABLE `servicepackage` (
   `RecordNumber` int(11) NOT NULL,
   `PlateNumber` varchar(20) NOT NULL,
-  `ServiceDate` date NOT NULL
+  `ServiceDate` date NOT NULL,
+  `PackageNumber` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -121,6 +144,12 @@ ALTER TABLE `car`
   ADD PRIMARY KEY (`PlateNumber`);
 
 --
+-- Indexes for table `package`
+--
+ALTER TABLE `package`
+  ADD PRIMARY KEY (`PackageNumber`);
+
+--
 -- Indexes for table `payment`
 --
 ALTER TABLE `payment`
@@ -132,7 +161,8 @@ ALTER TABLE `payment`
 --
 ALTER TABLE `servicepackage`
   ADD PRIMARY KEY (`RecordNumber`),
-  ADD KEY `PlateNumber` (`PlateNumber`);
+  ADD KEY `PlateNumber` (`PlateNumber`),
+  ADD KEY `PackageNumber` (`PackageNumber`);
 
 --
 -- Indexes for table `users`
@@ -158,6 +188,12 @@ ALTER TABLE `servicepackage`
   MODIFY `RecordNumber` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `package`
+--
+ALTER TABLE `package`
+  MODIFY `PackageNumber` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -177,7 +213,8 @@ ALTER TABLE `payment`
 -- Constraints for table `servicepackage`
 --
 ALTER TABLE `servicepackage`
-  ADD CONSTRAINT `servicepackage_ibfk_1` FOREIGN KEY (`PlateNumber`) REFERENCES `car` (`PlateNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `servicepackage_ibfk_1` FOREIGN KEY (`PlateNumber`) REFERENCES `car` (`PlateNumber`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `servicepackage_package_fk` FOREIGN KEY (`PackageNumber`) REFERENCES `package` (`PackageNumber`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 COMMIT;
 

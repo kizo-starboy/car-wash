@@ -1,4 +1,8 @@
 {
+  "name": "car-wash-backend",
+  "version": "1.0.0",
+  "description": "Car Wash Service Management System Backend",
+  "main": "server.js",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
@@ -8,6 +12,15 @@
     "nodemon": "^3.1.10"
   },
   "scripts": {
-    "dev": "nodemon server.js"
-  }
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "setup": "node auto_setup.js",
+    "setup-db": "node auto_setup.js",
+    "migrate": "node auto_setup.js",
+    "reset-db": "node auto_setup.js --reset",
+    "postinstall": "node auto_setup.js"
+  },
+  "keywords": ["car-wash", "management", "system", "nodejs", "mysql"],
+  "author": "Your Name",
+  "license": "MIT"
 }

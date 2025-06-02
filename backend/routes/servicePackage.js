@@ -2,19 +2,24 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// Get all service packages with car information
+// Get all service packages with car and package information
 router.get('/', (req, res) => {
   const query = `
     SELECT
       sp.RecordNumber,
       sp.PlateNumber,
       sp.ServiceDate,
+      sp.PackageNumber,
       c.CarType,
       c.CarSize,
       c.DriverName,
-      c.PhoneNumber
+      c.PhoneNumber,
+      p.PackageName,
+      p.PackageDescription,
+      p.PackagePrice
     FROM ServicePackage sp
     LEFT JOIN Car c ON sp.PlateNumber = c.PlateNumber
+    LEFT JOIN Package p ON sp.PackageNumber = p.PackageNumber
     ORDER BY sp.RecordNumber DESC
   `;
 
@@ -28,7 +33,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// Get service package by ID with car information
+// Get service package by ID with car and package information
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const query = `
@@ -36,12 +41,17 @@ router.get('/:id', (req, res) => {
       sp.RecordNumber,
       sp.PlateNumber,
       sp.ServiceDate,
+      sp.PackageNumber,
       c.CarType,
       c.CarSize,
       c.DriverName,
-      c.PhoneNumber
+      c.PhoneNumber,
+      p.PackageName,
+      p.PackageDescription,
+      p.PackagePrice
     FROM ServicePackage sp
     LEFT JOIN Car c ON sp.PlateNumber = c.PlateNumber
+    LEFT JOIN Package p ON sp.PackageNumber = p.PackageNumber
     WHERE sp.RecordNumber = ?
   `;
 
@@ -61,15 +71,15 @@ router.get('/:id', (req, res) => {
 
 // Add new service package
 router.post('/', (req, res) => {
-  const { plateNumber, serviceDate } = req.body;
+  const { plateNumber, serviceDate, packageNumber } = req.body;
 
-  if (!plateNumber || !serviceDate) {
-    return res.status(400).json({ message: 'Plate number and service date are required' });
+  if (!plateNumber || !serviceDate || !packageNumber) {
+    return res.status(400).json({ message: 'Plate number, service date, and package number are required' });
   }
 
-  const query = 'INSERT INTO ServicePackage (PlateNumber, ServiceDate) VALUES (?, ?)';
+  const query = 'INSERT INTO ServicePackage (PlateNumber, ServiceDate, PackageNumber) VALUES (?, ?, ?)';
 
-  db.query(query, [plateNumber, serviceDate], (err, result) => {
+  db.query(query, [plateNumber, serviceDate, packageNumber], (err, result) => {
     if (err) {
       console.error('Error adding service package:', err);
       return res.status(500).json({ message: 'Server error' });
@@ -80,7 +90,8 @@ router.post('/', (req, res) => {
       servicePackage: {
         recordNumber: result.insertId,
         plateNumber,
-        serviceDate
+        serviceDate,
+        packageNumber
       }
     });
   });
@@ -89,15 +100,15 @@ router.post('/', (req, res) => {
 // Update service package
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const { plateNumber, serviceDate } = req.body;
+  const { plateNumber, serviceDate, packageNumber } = req.body;
 
-  if (!plateNumber || !serviceDate) {
-    return res.status(400).json({ message: 'Plate number and service date are required' });
+  if (!plateNumber || !serviceDate || !packageNumber) {
+    return res.status(400).json({ message: 'Plate number, service date, and package number are required' });
   }
 
-  const query = 'UPDATE ServicePackage SET PlateNumber = ?, ServiceDate = ? WHERE RecordNumber = ?';
+  const query = 'UPDATE ServicePackage SET PlateNumber = ?, ServiceDate = ?, PackageNumber = ? WHERE RecordNumber = ?';
 
-  db.query(query, [plateNumber, serviceDate, id], (err, result) => {
+  db.query(query, [plateNumber, serviceDate, packageNumber, id], (err, result) => {
     if (err) {
       console.error('Error updating service package:', err);
       return res.status(500).json({ message: 'Server error' });
@@ -112,7 +123,8 @@ router.put('/:id', (req, res) => {
       servicePackage: {
         recordNumber: id,
         plateNumber,
-        serviceDate
+        serviceDate,
+        packageNumber
       }
     });
   });

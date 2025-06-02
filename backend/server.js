@@ -34,6 +34,8 @@ const paymentRoutes = require('./routes/payment');
 console.log('Payment routes loaded');
 const reportRoutes = require('./routes/report');
 console.log('Report routes loaded');
+const packageRoutes = require('./routes/packages');
+console.log('Package routes loaded');
 
 // Use routes
 console.log('Registering routes...');
@@ -47,6 +49,8 @@ app.use('/api/payments', paymentRoutes);
 console.log('Payment routes registered');
 app.use('/api/reports', reportRoutes);
 console.log('Report routes registered');
+app.use('/api/packages', packageRoutes);
+console.log('Package routes registered');
 
 // Start server
 app.listen(PORT, () => {
