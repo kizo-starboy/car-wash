@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Cars from './pages/Cars'
+import Packages from './pages/Packages'
 import ServiceRecords from './pages/ServiceRecords'
 import Payments from './pages/Payments'
 import Reports from './pages/Reports'
@@ -78,7 +79,13 @@ const App = () => {
         </ProtectedRoute>
       } />
 
-
+      <Route path="/packages" element={
+        <ProtectedRoute>
+          <Layout user={user} setUser={setUser}>
+            <Packages />
+          </Layout>
+        </ProtectedRoute>
+      } />
 
       <Route path="/services" element={
         <ProtectedRoute>

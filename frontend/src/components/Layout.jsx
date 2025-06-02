@@ -27,6 +27,7 @@ const Layout = ({ children, user, setUser }) => {
   const menuItems = [
     { path: '/', label: 'Dashboard' },
     { path: '/cars', label: 'Cars' },
+    { path: '/packages', label: 'Packages' },
     { path: '/services', label: 'Service Records' },
     { path: '/payments', label: 'Payments' },
     { path: '/reports', label: 'Reports' },
@@ -40,7 +41,7 @@ const Layout = ({ children, user, setUser }) => {
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-red-600 lg:translate-x-0 lg:static lg:inset-0 ${
+      <div className={`fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-gray-700 lg:translate-x-0 lg:static lg:inset-0 ${
         sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'
       }`}>
         <div className="flex items-center justify-between px-6 py-4">
@@ -59,8 +60,8 @@ const Layout = ({ children, user, setUser }) => {
               to={item.path}
               className={`flex items-center px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg ${
                 location.pathname === item.path
-                  ? 'bg-red-700'
-                  : 'hover:bg-red-700'
+                  ? 'bg-gray-800'
+                  : 'hover:bg-gray-800'
               }`}
             >
               <span className="font-medium">{item.label}</span>
@@ -69,7 +70,7 @@ const Layout = ({ children, user, setUser }) => {
 
           <button
             onClick={handleLogout}
-            className="flex items-center w-full px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg hover:bg-red-700"
+            className="flex items-center w-full px-4 py-3 mt-2 text-white transition-colors duration-200 rounded-lg hover:bg-gray-800"
           >
             <span className="font-medium">Logout</span>
           </button>

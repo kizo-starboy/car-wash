@@ -5,28 +5,55 @@ import toast from 'react-hot-toast'
 const ServiceRecords = () => {
   const [services, setServices] = useState([])
   const [cars, setCars] = useState([])
+  const [packages, setPackages] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [formData, setFormData] = useState({
     plateNumber: '',
-    serviceDate: new Date().toISOString().split('T')[0]
+    serviceDate: new Date().toISOString().split('T')[0],
+    packageNumber: ''
   })
   const [isEditing, setIsEditing] = useState(false)
   const [editId, setEditId] = useState(null)
 
-  // Fetch all service records and cars
+  // Fetch all service records, cars, and packages
   const fetchData = async () => {
     try {
-      const [servicesResponse, carsResponse] = await Promise.all([
+      const [servicesResponse, carsResponse, packagesResponse] = await Promise.all([
         axios.get('/services'),
-        axios.get('/cars')
+        axios.get('/cars'),
+        axios.get('/packages')
       ])
-      setServices(servicesResponse.data)
-      setCars(carsResponse.data)
+
+      // Handle services data
+      setServices(Array.isArray(servicesResponse.data) ? servicesResponse.data : [])
+
+      // Handle cars data
+      setCars(Array.isArray(carsResponse.data) ? carsResponse.data : [])
+
+      // Handle packages data (check for both formats)
+      const packagesData = packagesResponse.data
+      if (packagesData.success && Array.isArray(packagesData.data)) {
+        setPackages(packagesData.data)
+      } else if (Array.isArray(packagesData)) {
+        setPackages(packagesData)
+      } else {
+        console.error('Invalid packages data:', packagesData)
+        setPackages([])
+        toast.error('Failed to load packages. Please check if Package table exists.')
+      }
     } catch (error) {
       console.error('Error fetching data:', error)
-      toast.error('Failed to fetch data')
+      setServices([])
+      setCars([])
+      setPackages([])
+
+      if (error.response?.status === 500) {
+        toast.error('Database error: Please make sure all tables exist')
+      } else {
+        toast.error('Failed to fetch data')
+      }
     } finally {
       setLoading(false)
     }
@@ -68,7 +95,8 @@ const ServiceRecords = () => {
   const resetForm = () => {
     setFormData({
       plateNumber: '',
-      serviceDate: new Date().toISOString().split('T')[0]
+      serviceDate: new Date().toISOString().split('T')[0],
+      packageNumber: ''
     })
     setIsEditing(false)
     setEditId(null)
@@ -79,7 +107,8 @@ const ServiceRecords = () => {
   const handleEdit = (service) => {
     setFormData({
       plateNumber: service.PlateNumber,
-      serviceDate: service.ServiceDate.split('T')[0]
+      serviceDate: service.ServiceDate.split('T')[0],
+      packageNumber: service.PackageNumber || ''
     })
     setIsEditing(true)
     setEditId(service.RecordNumber)
@@ -103,12 +132,12 @@ const ServiceRecords = () => {
   }
 
   // Filter services based on search term
-  const filteredServices = services.filter(service =>
-    service.RecordNumber.toString().includes(searchTerm) ||
+  const filteredServices = Array.isArray(services) ? services.filter(service =>
+    service.RecordNumber?.toString().includes(searchTerm) ||
     service.PlateNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     service.DriverName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     new Date(service.ServiceDate).toLocaleDateString().includes(searchTerm.toLowerCase())
-  )
+  ) : []
 
   return (
     <div>
@@ -119,7 +148,7 @@ const ServiceRecords = () => {
             resetForm()
             setShowForm(!showForm)
           }}
-          className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800"
         >
           {showForm ? 'Cancel' : 'Add New Service Record'}
         </button>
@@ -141,7 +170,7 @@ const ServiceRecords = () => {
                   value={formData.plateNumber}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
                 >
                   <option value="">Select a car...</option>
                   {cars.map((car) => (
@@ -151,6 +180,27 @@ const ServiceRecords = () => {
                   ))}
                 </select>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Service Package
+                </label>
+                <select
+                  name="packageNumber"
+                  value={formData.packageNumber}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
+                >
+                  <option value="">Select a package...</option>
+                  {packages.map((pkg) => (
+                    <option key={pkg.PackageNumber} value={pkg.PackageNumber}>
+                      {pkg.PackageName} - {pkg.PackagePrice?.toLocaleString()} RWF
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Service Date
@@ -161,7 +211,7 @@ const ServiceRecords = () => {
                   value={formData.serviceDate}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
                 />
               </div>
             </div>
@@ -176,7 +226,7 @@ const ServiceRecords = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700"
+                className="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-800"
               >
                 {isEditing ? 'Update Record' : 'Add Record'}
               </button>
@@ -193,7 +243,7 @@ const ServiceRecords = () => {
               placeholder="Search by record number, plate number, driver name, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
             />
           </div>
         </div>
@@ -216,6 +266,9 @@ const ServiceRecords = () => {
                     Car Details
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Package
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Service Date
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -235,6 +288,11 @@ const ServiceRecords = () => {
                       <div className="text-gray-500 text-sm">{service.CarType} - {service.CarSize}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-gray-900 font-medium">{service.PackageName || 'N/A'}</div>
+                      <div className="text-gray-500 text-sm">{service.PackageDescription || ''}</div>
+                      <div className="text-gray-700 text-sm font-medium">{service.PackagePrice ? `${service.PackagePrice.toLocaleString()} RWF` : ''}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-gray-900">
                         {new Date(service.ServiceDate).toLocaleDateString()}
                       </div>
@@ -242,7 +300,7 @@ const ServiceRecords = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEdit(service)}
-                        className="text-red-600 hover:text-red-900 mr-3 px-3 py-1 border border-red-600 rounded hover:bg-red-50"
+                        className="text-gray-700 hover:text-gray-900 mr-3 px-3 py-1 border border-gray-700 rounded hover:bg-gray-50"
                         title="Edit"
                       >
                         Edit

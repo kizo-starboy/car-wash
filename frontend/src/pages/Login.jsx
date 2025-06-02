@@ -36,7 +36,7 @@ const Login = ({ setUser }) => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <h1 className="text-3xl font-extrabold text-red-600">SmartPark</h1>
+          <h1 className="text-3xl font-extrabold text-gray-700">SmartPark</h1>
           <p className="mt-2 text-gray-600">Car Washing Sales Management System</p>
         </div>
 
@@ -52,7 +52,7 @@ const Login = ({ setUser }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-700 focus:border-gray-700"
               placeholder="Enter your username"
             />
           </div>
@@ -68,7 +68,7 @@ const Login = ({ setUser }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-700 focus:border-gray-700"
               placeholder="Enter your password"
             />
           </div>
@@ -77,7 +77,7 @@ const Login = ({ setUser }) => {
             <button
               type="submit"
               disabled={loading}
-              className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-gray-700 border border-transparent rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
@@ -86,7 +86,7 @@ const Login = ({ setUser }) => {
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <Link to="/register" className="text-red-600 hover:text-red-700 font-medium">
+              <Link to="/register" className="text-gray-700 hover:text-gray-800 font-medium">
                 Create one here
               </Link>
             </p>

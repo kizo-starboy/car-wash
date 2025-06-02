@@ -144,7 +144,7 @@ const Payments = () => {
             resetForm()
             setShowForm(!showForm)
           }}
-          className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+          className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800"
         >
           {showForm ? 'Cancel' : (isEditing ? 'Cancel Edit' : 'Add New Payment')}
         </button>
@@ -165,7 +165,7 @@ const Payments = () => {
                   value={selectedCar}
                   onChange={handleCarChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
                 >
                   <option value="">Select a car...</option>
                   {cars.map((car) => (
@@ -186,7 +186,7 @@ const Payments = () => {
                   onChange={handleChange}
                   required
                   disabled={!selectedCar}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700 disabled:bg-gray-100"
                 >
                   <option value="">Select a service record...</option>
                   {getFilteredServiceRecords().map((record) => (
@@ -207,7 +207,7 @@ const Payments = () => {
                   value={formData.paymentDate}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
                 />
               </div>
 
@@ -222,7 +222,7 @@ const Payments = () => {
                   onChange={handleChange}
                   required
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
                   placeholder="e.g., 5000"
                 />
               </div>
@@ -238,7 +238,7 @@ const Payments = () => {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700"
+                className="px-4 py-2 text-white bg-gray-700 rounded-md hover:bg-gray-800"
               >
                 {isEditing ? 'Update Payment' : 'Add Payment'}
               </button>
@@ -255,7 +255,7 @@ const Payments = () => {
               placeholder="Search by payment number, amount, car, driver, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
             />
           </div>
         </div>
@@ -310,7 +310,7 @@ const Payments = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEdit(payment)}
-                        className="text-red-600 hover:text-red-900 mr-3 px-3 py-1 border border-red-600 rounded hover:bg-red-50"
+                        className="text-gray-700 hover:text-gray-900 mr-3 px-3 py-1 border border-gray-700 rounded hover:bg-gray-50"
                         title="Edit"
                       >
                         Edit

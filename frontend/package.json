@@ -1,7 +1,8 @@
 {
-  "name": "frontend",
+  "name": "car-wash-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Car Wash Service Management System Frontend",
   "type": "module",
   "scripts": {
     "dev": "vite",

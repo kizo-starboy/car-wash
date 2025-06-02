@@ -56,8 +56,8 @@ const Register = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-            <span className="text-red-600 text-2xl font-bold">+</span>
+          <div className="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+            <span className="text-gray-700 text-2xl font-bold">+</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
           <p className="text-gray-600 mt-2">Join SmartPark Car Wash System</p>
@@ -74,7 +74,7 @@ const Register = () => {
               value={formData.fullName}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
               placeholder="Enter your full name"
             />
           </div>
@@ -89,7 +89,7 @@ const Register = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
               placeholder="Choose a username"
             />
           </div>
@@ -105,7 +105,7 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-4 pr-12 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 pr-12 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                 placeholder="Create a password"
               />
               <button
@@ -129,7 +129,7 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                className="w-full px-4 pr-12 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                className="w-full px-4 pr-12 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-700 focus:border-gray-700"
                 placeholder="Confirm your password"
               />
               <button
@@ -145,7 +145,7 @@ const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+            className="w-full bg-gray-700 text-white py-3 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
           >
             {loading ? 'Creating Account...' : 'Create Account'}
           </button>
@@ -154,7 +154,7 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="text-red-600 hover:text-red-700 font-medium">
+            <Link to="/login" className="text-gray-700 hover:text-gray-800 font-medium">
               Sign in here
             </Link>
           </p>

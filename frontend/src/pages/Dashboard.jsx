@@ -34,10 +34,10 @@ const Dashboard = () => {
       color: 'bg-gray-100 border-gray-500'
     },
     {
-      title: 'Total Payments',
-      value: summary.paymentCount,
-      link: '/payments',
-      color: 'bg-red-100 border-red-500'
+      title: 'Service Packages',
+      value: summary.packageCount,
+      link: '/packages',
+      color: 'bg-white border-gray-700'
     },
     {
       title: 'Service Records',
@@ -46,10 +46,16 @@ const Dashboard = () => {
       color: 'bg-gray-200 border-gray-600'
     },
     {
+      title: 'Total Payments',
+      value: summary.paymentCount,
+      link: '/payments',
+      color: 'bg-gray-100 border-gray-700'
+    },
+    {
       title: 'Total Revenue',
       value: `${summary.totalRevenue?.toLocaleString() || 0} RWF`,
       link: '/payments',
-      color: 'bg-red-200 border-red-600'
+      color: 'bg-white border-gray-700'
     }
   ]
 
@@ -66,7 +72,7 @@ const Dashboard = () => {
       <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
       <p className="mt-2 text-gray-600">Welcome to SmartPark Car Washing Sales Management System</p>
 
-      <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 mt-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {cards.map((card, index) => (
           <Link
             key={index}
@@ -85,12 +91,19 @@ const Dashboard = () => {
 
       <div className="mt-8">
         <h2 className="text-xl font-semibold text-gray-800">Quick Actions</h2>
-        <div className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-4">
           <Link
             to="/cars"
-            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-red-500"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-gray-700"
           >
             <span className="font-medium text-gray-700">Register New Car</span>
+          </Link>
+
+          <Link
+            to="/packages"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-gray-700"
+          >
+            <span className="font-medium text-gray-700">Manage Packages</span>
           </Link>
 
           <Link
@@ -102,7 +115,7 @@ const Dashboard = () => {
 
           <Link
             to="/payments"
-            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-red-600"
+            className="flex items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-gray-700"
           >
             <span className="font-medium text-gray-700">Record Payment</span>
           </Link>

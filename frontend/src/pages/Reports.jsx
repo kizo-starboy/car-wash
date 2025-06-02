@@ -298,9 +298,9 @@ const Reports = () => {
                   <div className="text-2xl font-bold text-gray-800">{dailyReport?.count || 0}</div>
                 </div>
 
-                <div className="bg-red-50 p-4 rounded-lg border border-red-100">
-                  <div className="text-sm text-red-600 mb-1">Total Revenue</div>
-                  <div className="text-2xl font-bold text-red-800">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                  <div className="text-sm text-gray-600 mb-1">Total Revenue</div>
+                  <div className="text-2xl font-bold text-gray-800">
                     {dailyReport?.totalAmount?.toLocaleString() || 0} RWF
                   </div>
                 </div>
@@ -308,7 +308,7 @@ const Reports = () => {
                 <div className="flex items-center justify-center">
                   <button
                     onClick={handlePrintReport}
-                    className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800"
                   >
                     Print Daily
                   </button>
@@ -394,7 +394,7 @@ const Reports = () => {
               placeholder="Search by payment number, amount, or date..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-700 focus:border-gray-700"
             />
           </div>
         </div>
